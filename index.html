@@ -4,28 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script defer href="./script.js"></script>
+    <script defer src="./script.js"></script>
     <link rel="stylesheet" href="./style.css">
     <title>Document</title>
 </head>
 <body>
-    <div id="display">dummy numbers</div><br>
-    <button id="seven">7</button>
-    <button id="eight">8</button>
-    <button id="nine">9</button>
-    <button id="divide">÷</button>
-    <button id="four">4</button>
-    <button id="five">5</button>
-    <button id="six">6</button>
-    <button id="times">X</button>
-    <button id="one">1</button>
-    <button id="two">2</button>
-    <button id="one">3</button>
-    <button id="minus">-</button>
-    <button id="zero">0</button>
-    <button id="dec">.</button>
-    <button id="plus">+</button>
-    <button id="equals">=</button>
-    <button id="clear">CLEAR</button>
+    <div id="display"></div><br>
+    <div class="row one">
+        <button id="7" class="num">7</button>
+        <button id="8" class="num">8</button>
+        <button id="9" class="num">9</button>
+        <button id="divide" class="operate">÷</button>
+    </div>
+    <div class="row two">
+        <button id="4" class="num">4</button>
+        <button id="5" class="num">5</button>
+        <button id="6" class="num">6</button>
+        <button id="times" class="operate">X</button>
+    </div>
+    <div class="row three">
+        <button id="1" class="num">1</button>
+        <button id="2" class="num">2</button>
+        <button id="3" class="num">3</button>
+        <button id="minus" class="operate">-</button>
+    </div>
+    <div class="row four">
+        <button id="0" class="num">0</button>
+        <button id="." class="num">.</button>
+        <button id="plus" class="operate">+</button>
+        <button id="equals" class="result">=</button>
+    </div>
+    <div class="row five">
+        <button id="backspace">Back</button>
+        <button id="clear">CLEAR</button>
+    </div>
 </body>
 </html>
