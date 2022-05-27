@@ -11,18 +11,23 @@ const equals = document.querySelector('.result');
 equals.addEventListener('click', result);
 
 const backspace = document.querySelector('#backspace');
-backspace.addEventListener('click', function(){
+backspace.addEventListener('click', deletenum);
+
+function deletenum(){
     display.textContent = display.textContent.slice(0, display.textContent.length -1)
-});
+};
+
+window.addEventListener('keydown', shownumkey);
 
 const clear = document.querySelector('#clear');
 clear.addEventListener('click', function(){
-    display.textContent = '';
-    inpNum = false;
-    lastNum = false;
-    tempNum = false;
+    inpNum = null;
+    lastNum = null;
+    tempNum = null;
     mathCurrent = false;
     mathLast = false;
+    isLastOperator = false;
+    display.textContent = '';
 });
 
 let inpNum;
@@ -32,6 +37,8 @@ let mathCurrent = false;
 let mathLast = false;
 let isLastOperator = false;
 
+
+
 function shownum(){
     if (isLastOperator){
         display.textContent = '';
@@ -40,18 +47,88 @@ function shownum(){
         alert("No more than one decimal allowed.");
         return;
     }
-    const n = this.getAttribute('id');
+    const n = (this.getAttribute('id'));
     display.textContent += (n);
     isLastOperator = false;
+}
+
+function shownumkey(e){
+    console.log(e.key);
+    switch (e.key){
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case '.':
+            if (isLastOperator){
+                display.textContent = '';
+            };
+            if (display.textContent.includes('.') && e.key == '.'){
+                alert("No more than one decimal allowed.");
+                return;
+            }
+            const k =(e.key);
+            display.textContent += (k);
+            isLastOperator = false;
+            break;
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+            saveNumKey(e);
+            break;
+        case '=':
+        case 'Enter':
+            result();
+            console.log(tempNum);
+            return;
+        case 'Backspace':
+            deletenum();
+            return;
+        default:
+            return;
+    }
 }
 
 function saveNum(){
     isLastOperator = true;
     if (mathCurrent){
         mathLast = mathCurrent;
-        mathCurrent = this.getAttribute('id');
+        mathCurrent = (this.getAttribute('id'));
     } else {
-        mathCurrent = this.getAttribute('id');
+        mathCurrent = (this.getAttribute('id'));
+    };
+    if (!inpNum){
+        inpNum = Number(parseFloat(display.textContent).toFixed(1));
+    } else if (inpNum && !lastNum && !tempNum) {
+        lastNum = Number(inpNum);
+        inpNum = Number(parseFloat(display.textContent).toFixed(1));
+        tempNum = (operate(mathLast, lastNum, inpNum))
+        tempNum = Number(parseFloat(tempNum).toFixed(1));
+        display.textContent = tempNum
+    } else if (inpNum && lastNum && tempNum){
+        lastNum = Number(tempNum);
+        inpNum = Number(parseFloat(display.textContent).toFixed(1));
+        tempNum = (operate(mathLast, lastNum, inpNum))
+        tempNum = Number(parseFloat(tempNum).toFixed(1));
+        display.textContent = tempNum
+    }
+    console.log(inpNum, lastNum, tempNum, mathCurrent, mathLast);
+}
+
+function saveNumKey(e){
+    isLastOperator = true;
+    if (mathCurrent){
+        mathLast = mathCurrent;
+        mathCurrent = (e.key);
+    } else {
+        mathCurrent = (e.key);
     };
     if (!inpNum){
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
@@ -92,6 +169,7 @@ function result(){
             display.textContent = '';
             return;
         } else {
+            console.log(tempNum);
             display.textContent = Number(tempNum);
         }
     } 
@@ -115,15 +193,19 @@ function divide (x,y){
 function operate(operator,a,b){
     switch(operator){
         case 'plus':
+        case '+':
             return add(a,b)
             break;
         case 'minus':
+        case '-':
             return subtract(a,b)
             break;
         case 'times':
+        case '*':
             return multiply(a,b)
             break;
         case 'divide':
+        case '/':
             return divide(a,b)
             break;
         default:
