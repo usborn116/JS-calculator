@@ -36,6 +36,7 @@ let tempNum;
 let mathCurrent = false;
 let mathLast = false;
 let isLastOperator = false;
+console.log(tempNum);
 
 
 
@@ -53,6 +54,7 @@ function shownum(){
 }
 
 function shownumkey(e){
+    document.getElementById('display').focus();
     console.log(e.key);
     switch (e.key){
         case '0':
@@ -76,24 +78,29 @@ function shownumkey(e){
             const k =(e.key);
             display.textContent += (k);
             isLastOperator = false;
+            document.querySelector('body').focus();
             break;
         case '+':
         case '-':
         case '*':
         case '/':
             saveNumKey(e);
+            document.querySelector('body').focus();
             break;
         case '=':
         case 'Enter':
+            event.preventDefault();
             result();
             console.log(tempNum);
-            return;
+            document.querySelector('body').focus();
+            break;
         case 'Backspace':
             deletenum();
-            return;
+            document.querySelector('body').focus();
+            break;
         default:
             return;
-    }
+    } console.log(tempNum);
 }
 
 function saveNum(){
@@ -170,7 +177,8 @@ function result(){
             return;
         } else {
             console.log(tempNum);
-            display.textContent = Number(tempNum);
+            display.textContent = tempNum;
+            console.log(tempNum);
         }
     } 
 }
