@@ -4,31 +4,14 @@ nums.forEach(num => num.addEventListener('click', shownum));
 const display = document.querySelector('#display')
 display.textContent = '';
 
+const opdisplay = document.querySelector('#opdisplay')
+opdisplay.textContent = '';
+
 const operators = document.querySelectorAll('.operate')
 operators.forEach(operator => operator.addEventListener('click', saveNum));
 
 const equals = document.querySelector('.result');
 equals.addEventListener('click', result);
-
-const backspace = document.querySelector('#backspace');
-backspace.addEventListener('click', deletenum);
-
-function deletenum(){
-    display.textContent = display.textContent.slice(0, display.textContent.length -1)
-};
-
-window.addEventListener('keydown', shownumkey);
-
-const clear = document.querySelector('#clear');
-clear.addEventListener('click', function(){
-    inpNum = null;
-    lastNum = null;
-    tempNum = null;
-    mathCurrent = false;
-    mathLast = false;
-    isLastOperator = false;
-    display.textContent = '';
-});
 
 let inpNum;
 let lastNum;
@@ -36,9 +19,7 @@ let tempNum;
 let mathCurrent = false;
 let mathLast = false;
 let isLastOperator = false;
-console.log(tempNum);
-
-
+let hitequals = false;
 
 function shownum(){
     if (isLastOperator){
@@ -51,11 +32,11 @@ function shownum(){
     const n = (this.getAttribute('id'));
     display.textContent += (n);
     isLastOperator = false;
+    console.log(`inp: ${inpNum}, last: ${lastNum}, temp: ${tempNum}. mathCurrent: ${mathCurrent}, mathLast: ${mathLast}`)
 }
 
 function shownumkey(e){
     document.getElementById('display').focus();
-    console.log(e.key);
     switch (e.key){
         case '0':
         case '1':
@@ -89,9 +70,8 @@ function shownumkey(e){
             break;
         case '=':
         case 'Enter':
-            event.preventDefault();
+            e.preventDefault();
             result();
-            console.log(tempNum);
             document.querySelector('body').focus();
             break;
         case 'Backspace':
@@ -100,8 +80,9 @@ function shownumkey(e){
             break;
         default:
             return;
-    } console.log(tempNum);
+    } ;
 }
+
 
 function saveNum(){
     isLastOperator = true;
@@ -113,20 +94,25 @@ function saveNum(){
     };
     if (!inpNum){
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
+        opdisplay.textContent = this.getAttribute('id')
+    } else if (hitequals){
+        opdisplay.textContent = this.getAttribute('id')
+        hitequals = false;
     } else if (inpNum && !lastNum && !tempNum) {
         lastNum = Number(inpNum);
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
         tempNum = (operate(mathLast, lastNum, inpNum))
         tempNum = Number(parseFloat(tempNum).toFixed(1));
         display.textContent = tempNum
+        opdisplay.textContent = this.getAttribute('id')
     } else if (inpNum && lastNum && tempNum){
         lastNum = Number(tempNum);
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
         tempNum = (operate(mathLast, lastNum, inpNum))
         tempNum = Number(parseFloat(tempNum).toFixed(1));
         display.textContent = tempNum
+        opdisplay.textContent = this.getAttribute('id')
     }
-    console.log(inpNum, lastNum, tempNum, mathCurrent, mathLast);
 }
 
 function saveNumKey(e){
@@ -139,24 +125,31 @@ function saveNumKey(e){
     };
     if (!inpNum){
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
+        opdisplay.textContent = e.key
+    } else if (hitequals){
+        opdisplay.textContent = e.key
+        hitequals = false;
     } else if (inpNum && !lastNum && !tempNum) {
         lastNum = Number(inpNum);
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
         tempNum = (operate(mathLast, lastNum, inpNum))
         tempNum = Number(parseFloat(tempNum).toFixed(1));
         display.textContent = tempNum
+        opdisplay.textContent = e.key
     } else if (inpNum && lastNum && tempNum){
         lastNum = Number(tempNum);
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
         tempNum = (operate(mathLast, lastNum, inpNum))
         tempNum = Number(parseFloat(tempNum).toFixed(1));
         display.textContent = tempNum
+        opdisplay.textContent = e.key
     }
-    console.log(inpNum, lastNum, tempNum, mathCurrent, mathLast);
 }
 
 function result(){
+    console.log(`inp: ${inpNum}, last: ${lastNum}, temp: ${tempNum}. mathCurrent: ${mathCurrent}, mathLast: ${mathLast}`)
     mathLast = mathCurrent;
+    hitequals = true;
     if (!inpNum){
         alert("ERROR! No Numbers to Calculate");
         return;
@@ -164,6 +157,7 @@ function result(){
         lastNum = Number(tempNum);
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
         tempNum = parseFloat(operate(mathLast, lastNum, inpNum)).toFixed(1);
+        opdisplay.textContent = '='
         display.textContent = '';
         display.textContent = Number(tempNum);
     } else {
@@ -171,6 +165,7 @@ function result(){
         inpNum = Number(parseFloat(display.textContent).toFixed(1));
         tempNum = (operate(mathLast, lastNum, inpNum))
         tempNum = Number(parseFloat(tempNum).toFixed(1));
+        opdisplay.textContent = '='
         display.textContent = '';
         if (isNaN(tempNum)){
             display.textContent = '';
@@ -178,10 +173,31 @@ function result(){
         } else {
             console.log(tempNum);
             display.textContent = tempNum;
-            console.log(tempNum);
         }
     } 
 }
+
+const backspace = document.querySelector('#backspace');
+backspace.addEventListener('click', deletenum);
+
+function deletenum(){
+    display.textContent = display.textContent.slice(0, display.textContent.length -1)
+};
+
+window.addEventListener('keydown', shownumkey);
+
+const clear = document.querySelector('#clear');
+clear.addEventListener('click', function(){
+    inpNum = null;
+    lastNum = null;
+    tempNum = null;
+    mathCurrent = false;
+    mathLast = false;
+    isLastOperator = false;
+    display.textContent = '';
+    opdisplay.textContent = '';
+});
+
 
 const add = (x, y) => x + y;
 
@@ -200,20 +216,22 @@ function divide (x,y){
 
 function operate(operator,a,b){
     switch(operator){
-        case 'plus':
-        case '+':
+        case '+': 
+            opdisplay.textContent='+'         
             return add(a,b)
             break;
-        case 'minus':
         case '-':
+            opdisplay.textContent='-'
             return subtract(a,b)
             break;
-        case 'times':
+        case 'x':
         case '*':
+            opdisplay.textContent='x'
             return multiply(a,b)
             break;
-        case 'divide':
+        case '÷':
         case '/':
+            opdisplay.textContent='÷'
             return divide(a,b)
             break;
         default:

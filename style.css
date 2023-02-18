@@ -1,10 +1,12 @@
 body{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     font-family: 'Nunito', sans-serif;
     background-color: #a3c2c2;
+    height: 100vh;
+    margin: 0;
 }
 .calculator{
     display: flex;
@@ -12,10 +14,11 @@ body{
     border-radius: 25px;
     border: 2px solid #29293d;
     background-color: #666699;
-    margin: 10%;
     padding: 40px;
     justify-content: center;
     align-items: center;
+    height: 70vh;
+    margin-top: 5vh;
 }
 
 .row{
@@ -34,8 +37,8 @@ button{
     justify-content: center;
     background-color: #f2f2f2;
     border: 0.5px solid black;
-    width: 75px;
-    height: 75px;
+    width: 10vh;
+    height: 10vh;
     font-size: 32px;
     font-family: 'Nunito', sans-serif;
     border-radius: 50%;
@@ -61,14 +64,26 @@ button:hover{
 
 #display{
     display: flex;
+    min-width: 90%;
+    align-items: right;
+}
+
+#window{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
     background-color: #c2d6d6;
     text-align: right;
     border-radius: 15px;
-    height: 100px;
-    width: 103%;
     font-size: 32px;
+    min-height: 10vh;
     border: 1px solid black;
-    align-items: right;
+}
+
+#opdisplay{
+    display: flex;
+    width: 10%;
+    align-items: left;
 }
 
 .operate, .result{
@@ -77,7 +92,6 @@ button:hover{
 
 footer{
     display:flex;
-    margin-top: 300px;
     align-items: center;
     gap: 10px;
 }
